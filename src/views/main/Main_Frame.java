@@ -8,21 +8,29 @@ package views.main;
 
 import java.util.Vector;
 import utils.Configurations;
+import views.About;
 
 /**
  *
  * @author jrobby
  */
 public class Main_Frame extends javax.swing.JFrame {
+    
+    // <editor-fold defaultstate="collapsed" desc="Global Vars">
     Configurations configs;
+    //</editor-fold>
+       
     /**
-     * Creates new form Main_Frame
+     * Main_Frame(): Creates new form Main_Frame
      */
+    // <editor-fold defaultstate="collapsed" desc="Constructor">
     public Main_Frame() {
-        initComponents();
         configs = new Configurations();
+        initComponents();
+        
     }
-
+    //</editor-fold>
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -42,6 +50,13 @@ public class Main_Frame extends javax.swing.JFrame {
         p_north = new javax.swing.JPanel();
         sp_unknown = new javax.swing.JScrollPane();
         sp_unrelated = new javax.swing.JScrollPane();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        mn_file = new javax.swing.JMenu();
+        mnu_load_database = new javax.swing.JMenuItem();
+        mnu_close = new javax.swing.JMenuItem();
+        mnu_quit = new javax.swing.JMenuItem();
+        mn_help = new javax.swing.JMenu();
+        mnu_about = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -141,12 +156,54 @@ public class Main_Frame extends javax.swing.JFrame {
         p_northLayout.setVerticalGroup(
             p_northLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(p_northLayout.createSequentialGroup()
-                .addGap(22, 22, 22)
+                .addContainerGap(34, Short.MAX_VALUE)
                 .addGroup(p_northLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(sp_unrelated, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(sp_unknown, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(24, Short.MAX_VALUE))
+                    .addComponent(sp_unknown, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
+
+        mn_file.setText("File");
+
+        mnu_load_database.setText("Load Database");
+        mnu_load_database.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnu_load_databaseActionPerformed(evt);
+            }
+        });
+        mn_file.add(mnu_load_database);
+
+        mnu_close.setText("Close Database");
+        mnu_close.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnu_closeActionPerformed(evt);
+            }
+        });
+        mn_file.add(mnu_close);
+
+        mnu_quit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
+        mnu_quit.setText("Quit");
+        mnu_quit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnu_quitActionPerformed(evt);
+            }
+        });
+        mn_file.add(mnu_quit);
+
+        jMenuBar1.add(mn_file);
+
+        mn_help.setText("Help");
+
+        mnu_about.setText("About");
+        mnu_about.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnu_aboutActionPerformed(evt);
+            }
+        });
+        mn_help.add(mnu_about);
+
+        jMenuBar1.add(mn_help);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -163,6 +220,7 @@ public class Main_Frame extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(p_north, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(p_central, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -176,6 +234,28 @@ public class Main_Frame extends javax.swing.JFrame {
     private void b_prevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_prevActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_b_prevActionPerformed
+
+    private void mnu_load_databaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnu_load_databaseActionPerformed
+        
+   
+    }//GEN-LAST:event_mnu_load_databaseActionPerformed
+
+    private void mnu_quitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnu_quitActionPerformed
+
+        this.setVisible(false);
+        this.dispose();
+    }//GEN-LAST:event_mnu_quitActionPerformed
+
+    private void mnu_aboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnu_aboutActionPerformed
+
+        About ab = new About();
+        ab.setAlwaysOnTop(true);
+        ab.setVisible(true);
+    }//GEN-LAST:event_mnu_aboutActionPerformed
+
+    private void mnu_closeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnu_closeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_mnu_closeActionPerformed
 
     /**
      * @param args the command line arguments
@@ -219,8 +299,15 @@ public class Main_Frame extends javax.swing.JFrame {
     private javax.swing.JButton b_next;
     private javax.swing.JButton b_prev;
     private javax.swing.JComboBox<String> cb_fids;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JMenu mn_file;
+    private javax.swing.JMenu mn_help;
+    private javax.swing.JMenuItem mnu_about;
+    private javax.swing.JMenuItem mnu_close;
+    private javax.swing.JMenuItem mnu_load_database;
+    private javax.swing.JMenuItem mnu_quit;
     private javax.swing.JPanel p_central;
     private javax.swing.JPanel p_north;
     private javax.swing.JPanel p_south;
