@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package cluster_viewer;
+import views.main.Main_Frame;
 import java.io.IOException;
 /**
  *
@@ -19,8 +20,8 @@ public class Cluster_Viewer {
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
         
-//        Main_Form mf = new Main_Form();
-//        mf.setVisible(true);
+        Main_Frame mf = new Main_Frame();
+        mf.setVisible(true);
         
     }
     

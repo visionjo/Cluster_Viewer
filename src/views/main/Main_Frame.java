@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cluster_viewer;
+package views.main;
 
 import java.io.FileInputStream;
 import java.io.IOException;
