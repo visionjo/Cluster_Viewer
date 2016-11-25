@@ -5,12 +5,14 @@
  */
 package utils;
 
+import com.sun.webkit.Utilities;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Properties;
 import java.util.Vector;
+
 
 /**
  *
@@ -19,9 +21,10 @@ import java.util.Vector;
 public class Configurations {
 
     public String f_cluster_ids;
+    public String d_root;
     public static Vector<String> fids = new Vector();
     public static final String CONFIG_PATH
-            = "/home/jrobby/Documents/janus/sandbox/jrobinson/Agglomerative/java/Cluster_Viewer/resources/config.properties";
+            = "resources/config.properties";
 
     private static final String[] CONFIG_KEYS = {"d_images", "f_cluster_ids",
         "FIDS", "DO_DEBUG"};
@@ -34,7 +37,9 @@ public class Configurations {
 
         try {
 
-            input = new FileInputStream(CONFIG_PATH);
+            d_root = System.getProperty("user.dir") + "/";
+            String fpath = d_root + CONFIG_PATH;
+            input = new FileInputStream(fpath);
 
             // load a properties file
             prop.load(input);
@@ -52,10 +57,14 @@ public class Configurations {
 
             if (do_debug) {
                 System.out.println("Settings (" + CONFIG_PATH + ")");
+                System.out.println("Current working directory : " + d_root);
                 System.out.println(Integer.toString(fids.size()) + " FIDs");
                 System.out.println("Clsuter assignments located at " + f_cluster_ids);
                 System.out.println("Debug mode set on (i.e., VERBOSE = 1)");
+                
             }
+       
+
 
         } catch (IOException ex) {
             
