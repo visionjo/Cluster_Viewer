@@ -5,26 +5,22 @@
  */
 package views.main;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Properties;
+
 import java.util.Vector;
+import utils.Configurations;
 
 /**
  *
  * @author jrobby
  */
 public class Main_Frame extends javax.swing.JFrame {
-    Vector<String> fids = new Vector<>();
-    String f_cluster_ids;
-    String d_images;
+    Configurations configs;
     /**
      * Creates new form Main_Frame
      */
     public Main_Frame() {
         initComponents();
+        configs = new Configurations();
     }
 
     /**
@@ -216,43 +212,7 @@ public class Main_Frame extends javax.swing.JFrame {
         });
     }
 
-    private void CrunchifyGetPropertyValues() {
-
-        Properties prop = new Properties();
-        InputStream input = null;
-
-        try {
-
-            input = new FileInputStream("/home/jrobby/Documents/janus/sandbox/jrobinson/Agglomerative/java/Cluster_Review/resources/config.properties");
-
-  
-    
-    
-            // load a properties file
-            prop.load(input);
-            // get the property value and print it out
-            prop.getProperty("d_images");
-            f_cluster_ids = prop.getProperty("f_cluster_ids");
-            String tmp = prop.getProperty("FIDS");
-            
-            String[] fid_array  = tmp.split(",");
-            
-            fids.addAll(Arrays.asList(fid_array));
-            
-            
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-    }
+ 
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
