@@ -1,0 +1,1 @@
+left: 838 top: 78 right: 962 bottom: 202

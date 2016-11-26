@@ -7,11 +7,20 @@ package views.main;
 
 
 import java.util.HashMap;
-import java.util.Vector;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeSet;
 import utils.Configurations;
 import utils.Parse_FID_LUT;
 import utils.Parse_Face_LUT;
 import views.About;
+
+import ij.IJ;
+import ij.ImagePlus;
+import java.util.Vector;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import utils.Sample_LUT;
 
 /**
  *
@@ -23,6 +32,9 @@ public class Main_Frame extends javax.swing.JFrame {
     Configurations configs; 
     public HashMap<Integer, String>   face_lut;
     public HashMap<Integer, String>   fid_lut;
+    public Sample_LUT   sample_ids_lut; // sample ID to FID
+    String cfid; // current FID
+    
     //</editor-fold>
        
     /**
@@ -34,6 +46,8 @@ public class Main_Frame extends javax.swing.JFrame {
         initComponents();
         get_luts();
         
+        sample_ids_lut = new Sample_LUT(configs.f_sample_lut, configs.do_debug);
+        sample_ids_lut.readLUT();
     }
     //</editor-fold>
     
@@ -45,11 +59,39 @@ public class Main_Frame extends javax.swing.JFrame {
     {       
         Parse_Face_LUT pface = new Parse_Face_LUT(configs.f_face_lut, configs.do_debug);
         pface.readLUT();
-        face_lut = pface.getDatabase();
+        face_lut = pface.getLUT();
 
         Parse_FID_LUT pfid = new Parse_FID_LUT(configs.f_fid_lut, configs.do_debug);
         pfid.readLUT();
-        face_lut = pfid.getDatabase();
+        fid_lut = pfid.getLUT();
+        
+        set_window_state();
+    }
+       
+    private void set_window_state() {                                       
+        // Set the appropriate state of all components of main GUI (ie this)
+        set_fid_cbox();
+        if (cb_fids.getItemCount()>0)
+            b_go.setEnabled(true);
+        else
+            b_go.setEnabled(false);
+               
+    }
+    
+    private void set_fid_cbox() {                                       
+        // Set the appropriate state of all components of main GUI (ie this)
+        Set<Integer> fid_ids = fid_lut.keySet();
+        // sort by key
+        TreeSet sortedSet = new TreeSet<>(fid_ids);
+
+        for (Iterator<Integer> it = sortedSet.iterator(); it.hasNext();) {
+            int f = it.next();
+            String fid = fid_lut.get(f);
+            cb_fids.addItem(fid);
+            if (configs.do_debug) {
+                System.out.println("Adding " + fid + " to list menu");
+            }
+        }
     }
     
     /**
@@ -63,7 +105,7 @@ public class Main_Frame extends javax.swing.JFrame {
 
         p_south = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
-        b_next = new javax.swing.JButton();
+        b_go = new javax.swing.JButton();
         cb_fids = new javax.swing.JComboBox<>();
         b_prev = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
@@ -87,16 +129,15 @@ public class Main_Frame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        b_next.setText("jButton1");
-
-        cb_fids.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        b_prev.setIcon(new javax.swing.ImageIcon("/home/jrobby/Documents/janus/sandbox/jrobinson/Agglomerative/java/Cluster_Viewer/resources/arrowleft.png")); // NOI18N
-        b_prev.addActionListener(new java.awt.event.ActionListener() {
+        b_go.setText("Go!");
+        b_go.setToolTipText("Press to load clustered faces for FID selected in dropdown menu.");
+        b_go.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                b_prevActionPerformed(evt);
+                b_go_pressed(evt);
             }
         });
+
+        b_prev.setIcon(new javax.swing.ImageIcon("/home/jrobby/Documents/janus/sandbox/jrobinson/Agglomerative/java/Cluster_Viewer/resources/arrowleft.png")); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -108,7 +149,7 @@ public class Main_Frame extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(cb_fids, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(b_next)
+                .addComponent(b_go)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -118,7 +159,7 @@ public class Main_Frame extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(b_prev)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(b_next)
+                        .addComponent(b_go)
                         .addComponent(cb_fids, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -239,19 +280,9 @@ public class Main_Frame extends javax.swing.JFrame {
         mn_file.setText("File");
 
         mnu_load_database.setText("Load Database");
-        mnu_load_database.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnu_load_databaseActionPerformed(evt);
-            }
-        });
         mn_file.add(mnu_load_database);
 
         mnu_close.setText("Close Database");
-        mnu_close.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnu_closeActionPerformed(evt);
-            }
-        });
         mn_file.add(mnu_close);
 
         mnu_quit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
@@ -305,14 +336,6 @@ public class Main_Frame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void b_prevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_prevActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_b_prevActionPerformed
-
-    private void mnu_load_databaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnu_load_databaseActionPerformed
-        
-    }//GEN-LAST:event_mnu_load_databaseActionPerformed
-
     private void mnu_quitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnu_quitActionPerformed
 
         this.setVisible(false);
@@ -326,10 +349,6 @@ public class Main_Frame extends javax.swing.JFrame {
         ab.setVisible(true);
     }//GEN-LAST:event_mnu_aboutActionPerformed
 
-    private void mnu_closeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnu_closeActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_mnu_closeActionPerformed
-
     private void tf_ids_foutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_ids_foutActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_tf_ids_foutActionPerformed
@@ -338,6 +357,48 @@ public class Main_Frame extends javax.swing.JFrame {
         
         
     }//GEN-LAST:event_b_load_pressed
+
+    private void b_go_pressed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_go_pressed
+        // Load current FID selected in drop down menu
+        int ind = cb_fids.getSelectedIndex();
+        if (ind == -1) {
+            //custom title, error icon
+            JOptionPane.showMessageDialog(new JFrame(),
+                    "Must select FID.",
+                    "Loading Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        cfid = cb_fids.getItemAt(ind);
+        
+        Vector<String> fid_paths = new Vector<>();
+        Vector<Integer> sample_ids = sample_ids_lut.get(cfid);
+        
+        String fpath = configs.d_images + "/" + cfid;
+        // The Iterator object is obtained using iterator() method
+        Iterator it = sample_ids.iterator();
+        // To iterate through the elements of the collection we can use hasNext() and next() methods of Iterator
+
+        System.out.println("Faces for FID : " + cfid);
+        // all images for current FID (i.e., images to be displayed)
+        while(it.hasNext())
+            System.out.println(face_lut.get(it.next()));
+        
+        // sample code snippet: open first image of fid collection
+        String ipath = configs.d_images + face_lut.get(sample_ids.get(0));
+        
+        ImagePlus sample_image = IJ.openImage(ipath);
+        sample_image.show();
+
+        
+        /**
+         *  WORK HERE
+         */
+        
+        // set fpaths to images of current FID
+        
+         
+    }//GEN-LAST:event_b_go_pressed
 
     /**
      * @param args the command line arguments
@@ -378,8 +439,8 @@ public class Main_Frame extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton b_go;
     private javax.swing.JButton b_load;
-    private javax.swing.JButton b_next;
     private javax.swing.JButton b_prev;
     private javax.swing.JButton b_save;
     private javax.swing.JComboBox<String> cb_fids;

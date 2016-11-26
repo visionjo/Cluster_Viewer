@@ -76,13 +76,13 @@ public class Parse_Face_LUT {
       }
    }// </editor-fold>
 
-   // <editor-fold defaultstate="collapsed" desc="getDatabase">
+   // <editor-fold defaultstate="collapsed" desc="getLUT">
    /**
     * Method to return <ID, FID> pairs
     *
     * @return face_lut
     */
-   public HashMap getDatabase() {
+   public HashMap getLUT() {
       return face_lut;
    }// </editor-fold>
    
