@@ -21,7 +21,10 @@ import java.util.Vector;
 public class Configurations {
 
     public String f_cluster_ids;
-    public String d_root;
+    public String d_root; 
+    public String f_face_lut = "info/Face_LUT.csv";
+    public String f_fid_lut = "info/FID_LUT.csv";
+    
     public static Vector<String> fids = new Vector();
     public static final String CONFIG_PATH
             = "resources/config.properties";
@@ -38,6 +41,8 @@ public class Configurations {
         try {
 
             d_root = System.getProperty("user.dir") + "/";
+            f_fid_lut = d_root + f_fid_lut;
+            f_face_lut = d_root + f_face_lut;
             String fpath = d_root + CONFIG_PATH;
             input = new FileInputStream(fpath);
 
@@ -58,10 +63,12 @@ public class Configurations {
             if (do_debug) {
                 System.out.println("Settings (" + CONFIG_PATH + ")");
                 System.out.println("Current working directory : " + d_root);
-                System.out.println(Integer.toString(fids.size()) + " FIDs");
-                System.out.println("Clsuter assignments located at " + f_cluster_ids);
-                System.out.println("Debug mode set on (i.e., VERBOSE = 1)");
+                System.out.println("FID LUT: " + f_fid_lut);
+                System.out.println("Face LUT " + f_face_lut);
                 
+                System.out.println(Integer.toString(fids.size()) + " FIDs");
+                System.out.println("Cluster assignments located at " + f_cluster_ids);
+                System.out.println("Debug mode set on (i.e., VERBOSE = 1)");
             }
        
 

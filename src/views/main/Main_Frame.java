@@ -6,8 +6,11 @@
 package views.main;
 
 
+import java.util.HashMap;
 import java.util.Vector;
 import utils.Configurations;
+import utils.Parse_FID_LUT;
+import utils.Parse_Face_LUT;
 import views.About;
 
 /**
@@ -17,7 +20,9 @@ import views.About;
 public class Main_Frame extends javax.swing.JFrame {
     
     // <editor-fold defaultstate="collapsed" desc="Global Vars">
-    Configurations configs;
+    Configurations configs; 
+    public HashMap<Integer, String>   face_lut;
+    public HashMap<Integer, String>   fid_lut;
     //</editor-fold>
        
     /**
@@ -27,9 +32,25 @@ public class Main_Frame extends javax.swing.JFrame {
     public Main_Frame() {
         configs = new Configurations();
         initComponents();
+        get_luts();
         
     }
     //</editor-fold>
+    
+       
+    /**
+     * Method to read in both FID and FaceID LUTs.
+     */
+    private void get_luts()
+    {       
+        Parse_Face_LUT pface = new Parse_Face_LUT(configs.f_face_lut, configs.do_debug);
+        pface.readLUT();
+        face_lut = pface.getDatabase();
+
+        Parse_FID_LUT pfid = new Parse_FID_LUT(configs.f_fid_lut, configs.do_debug);
+        pfid.readLUT();
+        face_lut = pfid.getDatabase();
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -46,6 +67,12 @@ public class Main_Frame extends javax.swing.JFrame {
         cb_fids = new javax.swing.JComboBox<>();
         b_prev = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
+        tf_ids_fin = new javax.swing.JTextField();
+        tf_ids_fout = new javax.swing.JTextField();
+        l_ids_out = new javax.swing.JLabel();
+        l_ids_in = new javax.swing.JLabel();
+        b_load = new javax.swing.JButton();
+        b_save = new javax.swing.JButton();
         p_central = new javax.swing.JPanel();
         p_north = new javax.swing.JPanel();
         sp_unknown = new javax.swing.JScrollPane();
@@ -98,15 +125,65 @@ public class Main_Frame extends javax.swing.JFrame {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("File Settings"));
 
+        tf_ids_fin.setText("<CSV Filepath>");
+
+        tf_ids_fout.setText("<CSV Filepath>");
+        tf_ids_fout.setEnabled(false);
+        tf_ids_fout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tf_ids_foutActionPerformed(evt);
+            }
+        });
+
+        l_ids_out.setText("Cluster IDs out:");
+        l_ids_out.setEnabled(false);
+
+        l_ids_in.setText("Cluster IDs in:");
+
+        b_load.setText("jButton1");
+        b_load.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        b_load.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                b_load_pressed(evt);
+            }
+        });
+
+        b_save.setText("jButton1");
+        b_save.setEnabled(false);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(l_ids_in, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(l_ids_out, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(tf_ids_fout, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(b_save))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(tf_ids_fin, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(b_load)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 59, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tf_ids_fin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(l_ids_in)
+                    .addComponent(b_load))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tf_ids_fout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(l_ids_out)
+                    .addComponent(b_save)))
         );
 
         javax.swing.GroupLayout p_southLayout = new javax.swing.GroupLayout(p_south);
@@ -117,10 +194,7 @@ public class Main_Frame extends javax.swing.JFrame {
                 .addGap(156, 156, 156)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, p_southLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(88, 88, 88))
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         p_southLayout.setVerticalGroup(
             p_southLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -237,7 +311,6 @@ public class Main_Frame extends javax.swing.JFrame {
 
     private void mnu_load_databaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnu_load_databaseActionPerformed
         
-   
     }//GEN-LAST:event_mnu_load_databaseActionPerformed
 
     private void mnu_quitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnu_quitActionPerformed
@@ -256,6 +329,15 @@ public class Main_Frame extends javax.swing.JFrame {
     private void mnu_closeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnu_closeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_mnu_closeActionPerformed
+
+    private void tf_ids_foutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_ids_foutActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tf_ids_foutActionPerformed
+
+    private void b_load_pressed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_load_pressed
+        
+        
+    }//GEN-LAST:event_b_load_pressed
 
     /**
      * @param args the command line arguments
@@ -296,12 +378,16 @@ public class Main_Frame extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton b_load;
     private javax.swing.JButton b_next;
     private javax.swing.JButton b_prev;
+    private javax.swing.JButton b_save;
     private javax.swing.JComboBox<String> cb_fids;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JLabel l_ids_in;
+    private javax.swing.JLabel l_ids_out;
     private javax.swing.JMenu mn_file;
     private javax.swing.JMenu mn_help;
     private javax.swing.JMenuItem mnu_about;
@@ -313,5 +399,7 @@ public class Main_Frame extends javax.swing.JFrame {
     private javax.swing.JPanel p_south;
     private javax.swing.JScrollPane sp_unknown;
     private javax.swing.JScrollPane sp_unrelated;
+    private javax.swing.JTextField tf_ids_fin;
+    private javax.swing.JTextField tf_ids_fout;
     // End of variables declaration//GEN-END:variables
 }
