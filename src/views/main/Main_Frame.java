@@ -50,8 +50,13 @@ public class Main_Frame extends javax.swing.JFrame {
         Parse_FID_LUT pfid = new Parse_FID_LUT(configs.f_fid_lut, configs.do_debug);
         pfid.readLUT();
         face_lut = pfid.getDatabase();
+        
+        set_window_state();
     }
-    
+       
+    private void set_window_state() {                                       
+        // TODO add your handling code here:
+    }    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -92,11 +97,6 @@ public class Main_Frame extends javax.swing.JFrame {
         cb_fids.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         b_prev.setIcon(new javax.swing.ImageIcon("/home/jrobby/Documents/janus/sandbox/jrobinson/Agglomerative/java/Cluster_Viewer/resources/arrowleft.png")); // NOI18N
-        b_prev.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                b_prevActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -239,19 +239,9 @@ public class Main_Frame extends javax.swing.JFrame {
         mn_file.setText("File");
 
         mnu_load_database.setText("Load Database");
-        mnu_load_database.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnu_load_databaseActionPerformed(evt);
-            }
-        });
         mn_file.add(mnu_load_database);
 
         mnu_close.setText("Close Database");
-        mnu_close.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnu_closeActionPerformed(evt);
-            }
-        });
         mn_file.add(mnu_close);
 
         mnu_quit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
@@ -305,14 +295,6 @@ public class Main_Frame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void b_prevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_prevActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_b_prevActionPerformed
-
-    private void mnu_load_databaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnu_load_databaseActionPerformed
-        
-    }//GEN-LAST:event_mnu_load_databaseActionPerformed
-
     private void mnu_quitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnu_quitActionPerformed
 
         this.setVisible(false);
@@ -325,10 +307,6 @@ public class Main_Frame extends javax.swing.JFrame {
         ab.setAlwaysOnTop(true);
         ab.setVisible(true);
     }//GEN-LAST:event_mnu_aboutActionPerformed
-
-    private void mnu_closeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnu_closeActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_mnu_closeActionPerformed
 
     private void tf_ids_foutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_ids_foutActionPerformed
         // TODO add your handling code here:
