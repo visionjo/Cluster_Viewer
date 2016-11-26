@@ -7,6 +7,9 @@ package views.main;
 
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.Vector;
 import utils.Configurations;
 import utils.Parse_FID_LUT;
@@ -49,14 +52,33 @@ public class Main_Frame extends javax.swing.JFrame {
 
         Parse_FID_LUT pfid = new Parse_FID_LUT(configs.f_fid_lut, configs.do_debug);
         pfid.readLUT();
-        face_lut = pfid.getDatabase();
+        fid_lut = pfid.getDatabase();
         
         set_window_state();
     }
        
     private void set_window_state() {                                       
-        // TODO add your handling code here:
-    }    
+        // Set the appropriate state of all components of main GUI (ie this)
+        set_fid_cbox();
+               
+    }
+    
+    private void set_fid_cbox() {                                       
+        // Set the appropriate state of all components of main GUI (ie this)
+        Set<Integer> fid_ids = fid_lut.keySet();
+        // sort by key
+        TreeSet sortedSet = new TreeSet<>(fid_ids);
+
+        for (Iterator<Integer> it = sortedSet.iterator(); it.hasNext();) {
+            int f = it.next();
+            String fid = fid_lut.get(f);
+            cb_fids.addItem(fid);
+            if (configs.do_debug) {
+                System.out.println(fid);
+            }
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -93,8 +115,6 @@ public class Main_Frame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         b_next.setText("jButton1");
-
-        cb_fids.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         b_prev.setIcon(new javax.swing.ImageIcon("/home/jrobby/Documents/janus/sandbox/jrobinson/Agglomerative/java/Cluster_Viewer/resources/arrowleft.png")); // NOI18N
 
