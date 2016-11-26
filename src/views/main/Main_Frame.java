@@ -17,10 +17,19 @@ import views.About;
 
 import ij.IJ;
 import ij.ImagePlus;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import utils.Sample_LUT;
+import views.ImageGallery;
 
 /**
  *
@@ -106,7 +115,7 @@ public class Main_Frame extends javax.swing.JFrame {
         p_south = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         b_go = new javax.swing.JButton();
-        cb_fids = new javax.swing.JComboBox<>();
+        cb_fids = new javax.swing.JComboBox<String>();
         b_prev = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         tf_ids_fin = new javax.swing.JTextField();
@@ -116,6 +125,7 @@ public class Main_Frame extends javax.swing.JFrame {
         b_load = new javax.swing.JButton();
         b_save = new javax.swing.JButton();
         p_central = new javax.swing.JPanel();
+        p_im1 = new javax.swing.JPanel();
         p_north = new javax.swing.JPanel();
         sp_unknown = new javax.swing.JScrollPane();
         sp_unrelated = new javax.swing.JScrollPane();
@@ -136,8 +146,6 @@ public class Main_Frame extends javax.swing.JFrame {
                 b_go_pressed(evt);
             }
         });
-
-        b_prev.setIcon(new javax.swing.ImageIcon("/home/jrobby/Documents/janus/sandbox/jrobinson/Agglomerative/java/Cluster_Viewer/resources/arrowleft.png")); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -246,15 +254,32 @@ public class Main_Frame extends javax.swing.JFrame {
                 .addContainerGap(73, Short.MAX_VALUE))
         );
 
+        javax.swing.GroupLayout p_im1Layout = new javax.swing.GroupLayout(p_im1);
+        p_im1.setLayout(p_im1Layout);
+        p_im1Layout.setHorizontalGroup(
+            p_im1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 179, Short.MAX_VALUE)
+        );
+        p_im1Layout.setVerticalGroup(
+            p_im1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 188, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout p_centralLayout = new javax.swing.GroupLayout(p_central);
         p_central.setLayout(p_centralLayout);
         p_centralLayout.setHorizontalGroup(
             p_centralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(p_centralLayout.createSequentialGroup()
+                .addGap(86, 86, 86)
+                .addComponent(p_im1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         p_centralLayout.setVerticalGroup(
             p_centralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 396, Short.MAX_VALUE)
+            .addGroup(p_centralLayout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addComponent(p_im1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(176, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout p_northLayout = new javax.swing.GroupLayout(p_north);
@@ -382,7 +407,8 @@ public class Main_Frame extends javax.swing.JFrame {
         System.out.println("Faces for FID : " + cfid);
         // all images for current FID (i.e., images to be displayed)
         while(it.hasNext())
-            System.out.println(face_lut.get(it.next()));
+            fid_paths.add(face_lut.get(it.next()));
+//            System.out.println(face_lut.get(it.next()));
         
         // sample code snippet: open first image of fid collection
         String ipath = configs.d_images + face_lut.get(sample_ids.get(0));
@@ -390,6 +416,11 @@ public class Main_Frame extends javax.swing.JFrame {
         ImagePlus sample_image = IJ.openImage(ipath);
         sample_image.show();
 
+      
+               
+        ImageGallery id = new ImageGallery(fid_paths);
+        id.setVisible(true);
+        
         
         /**
          *  WORK HERE
@@ -456,6 +487,7 @@ public class Main_Frame extends javax.swing.JFrame {
     private javax.swing.JMenuItem mnu_load_database;
     private javax.swing.JMenuItem mnu_quit;
     private javax.swing.JPanel p_central;
+    private javax.swing.JPanel p_im1;
     private javax.swing.JPanel p_north;
     private javax.swing.JPanel p_south;
     private javax.swing.JScrollPane sp_unknown;
