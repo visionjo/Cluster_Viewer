@@ -1,0 +1,1 @@
+left: 173 top: 173 right: 245 bottom: 245
