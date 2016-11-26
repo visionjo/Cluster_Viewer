@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.Vector;
 import utils.Configurations;
 import utils.Parse_FID_LUT;
 import utils.Parse_Face_LUT;
@@ -18,8 +17,10 @@ import views.About;
 
 import ij.IJ;
 import ij.ImagePlus;
+import java.util.Vector;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import utils.Sample_LUT;
 
 /**
  *
@@ -31,6 +32,9 @@ public class Main_Frame extends javax.swing.JFrame {
     Configurations configs; 
     public HashMap<Integer, String>   face_lut;
     public HashMap<Integer, String>   fid_lut;
+    public Sample_LUT   sample_ids_lut; // sample ID to FID
+    String cfid; // current FID
+    
     //</editor-fold>
        
     /**
@@ -42,6 +46,8 @@ public class Main_Frame extends javax.swing.JFrame {
         initComponents();
         get_luts();
         
+        sample_ids_lut = new Sample_LUT(configs.f_sample_lut, configs.do_debug);
+        sample_ids_lut.readLUT();
     }
     //</editor-fold>
     
@@ -53,11 +59,11 @@ public class Main_Frame extends javax.swing.JFrame {
     {       
         Parse_Face_LUT pface = new Parse_Face_LUT(configs.f_face_lut, configs.do_debug);
         pface.readLUT();
-        face_lut = pface.getDatabase();
+        face_lut = pface.getLUT();
 
         Parse_FID_LUT pfid = new Parse_FID_LUT(configs.f_fid_lut, configs.do_debug);
         pfid.readLUT();
-        fid_lut = pfid.getDatabase();
+        fid_lut = pfid.getLUT();
         
         set_window_state();
     }
@@ -83,7 +89,7 @@ public class Main_Frame extends javax.swing.JFrame {
             String fid = fid_lut.get(f);
             cb_fids.addItem(fid);
             if (configs.do_debug) {
-                System.out.println(fid);
+                System.out.println("Adding " + fid + " to list menu");
             }
         }
     }
@@ -355,7 +361,7 @@ public class Main_Frame extends javax.swing.JFrame {
     private void b_go_pressed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_go_pressed
         // Load current FID selected in drop down menu
         int ind = cb_fids.getSelectedIndex();
-        if (ind == 0) {
+        if (ind == -1) {
             //custom title, error icon
             JOptionPane.showMessageDialog(new JFrame(),
                     "Must select FID.",
@@ -363,7 +369,27 @@ public class Main_Frame extends javax.swing.JFrame {
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
-        String fid = cb_fids.getItemAt(ind);
+        cfid = cb_fids.getItemAt(ind);
+        
+        Vector<String> fid_paths = new Vector<>();
+        Vector<Integer> sample_ids = sample_ids_lut.get(cfid);
+        
+        String fpath = configs.d_images + "/" + cfid;
+        // The Iterator object is obtained using iterator() method
+        Iterator it = sample_ids.iterator();
+        // To iterate through the elements of the collection we can use hasNext() and next() methods of Iterator
+
+        System.out.println("Faces for FID : " + cfid);
+        // all images for current FID (i.e., images to be displayed)
+        while(it.hasNext())
+            System.out.println(face_lut.get(it.next()));
+        
+        // sample code snippet: open first image of fid collection
+        String ipath = configs.d_images + face_lut.get(sample_ids.get(0));
+        
+        ImagePlus sample_image = IJ.openImage(ipath);
+        sample_image.show();
+
         
         /**
          *  WORK HERE
