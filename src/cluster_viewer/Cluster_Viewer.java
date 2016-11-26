@@ -6,6 +6,7 @@
 package cluster_viewer;
 import views.main.Main_Frame;
 import java.io.IOException;
+import views.ImageGallery;
 /**
  *
  * @author jrobby
@@ -22,7 +23,6 @@ public class Cluster_Viewer {
         
         Main_Frame mf = new Main_Frame();
         mf.setVisible(true);
-        
     }
     
 }
