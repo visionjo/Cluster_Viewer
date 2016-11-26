@@ -18,6 +18,8 @@ import views.About;
 
 import ij.IJ;
 import ij.ImagePlus;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -123,6 +125,11 @@ public class Main_Frame extends javax.swing.JFrame {
 
         b_go.setText("Go!");
         b_go.setToolTipText("Press to load clustered faces for FID selected in dropdown menu.");
+        b_go.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                b_go_pressed(evt);
+            }
+        });
 
         b_prev.setIcon(new javax.swing.ImageIcon("/home/jrobby/Documents/janus/sandbox/jrobinson/Agglomerative/java/Cluster_Viewer/resources/arrowleft.png")); // NOI18N
 
@@ -344,6 +351,28 @@ public class Main_Frame extends javax.swing.JFrame {
         
         
     }//GEN-LAST:event_b_load_pressed
+
+    private void b_go_pressed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_go_pressed
+        // Load current FID selected in drop down menu
+        int ind = cb_fids.getSelectedIndex();
+        if (ind == 0) {
+            //custom title, error icon
+            JOptionPane.showMessageDialog(new JFrame(),
+                    "Must select FID.",
+                    "Loading Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        String fid = cb_fids.getItemAt(ind);
+        
+        /**
+         *  WORK HERE
+         */
+        
+        // set fpaths to images of current FID
+        
+         
+    }//GEN-LAST:event_b_go_pressed
 
     /**
      * @param args the command line arguments
