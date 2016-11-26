@@ -22,6 +22,7 @@ public class Configurations {
 
     public String f_cluster_ids;
     public String d_root; 
+    public String d_data; 
     public String f_face_lut = "info/Face_LUT.csv";
     public String f_fid_lut = "info/FID_LUT.csv";
     
@@ -30,7 +31,7 @@ public class Configurations {
             = "resources/config.properties";
 
     private static final String[] CONFIG_KEYS = {"d_images", "f_cluster_ids",
-        "FIDS", "DO_DEBUG"};
+        "FIDS", "DO_DEBUG", "data_dir"};
     public boolean do_debug = true;
 
     public Configurations() {
@@ -60,9 +61,11 @@ public class Configurations {
             tmp = prop.getProperty(CONFIG_KEYS[3]);
             do_debug = "true".equals(tmp.toLowerCase());
 
+            d_data = prop.getProperty(CONFIG_KEYS[4]);
             if (do_debug) {
                 System.out.println("Settings (" + CONFIG_PATH + ")");
                 System.out.println("Current working directory : " + d_root);
+                System.out.println("Data Directory: " + d_data);
                 System.out.println("FID LUT: " + f_fid_lut);
                 System.out.println("Face LUT " + f_face_lut);
                 

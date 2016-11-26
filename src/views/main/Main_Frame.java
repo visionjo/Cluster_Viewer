@@ -16,6 +16,9 @@ import utils.Parse_FID_LUT;
 import utils.Parse_Face_LUT;
 import views.About;
 
+import ij.IJ;
+import ij.ImagePlus;
+
 /**
  *
  * @author jrobby
@@ -60,6 +63,10 @@ public class Main_Frame extends javax.swing.JFrame {
     private void set_window_state() {                                       
         // Set the appropriate state of all components of main GUI (ie this)
         set_fid_cbox();
+        if (cb_fids.getItemCount()>0)
+            b_go.setEnabled(true);
+        else
+            b_go.setEnabled(false);
                
     }
     
@@ -90,7 +97,7 @@ public class Main_Frame extends javax.swing.JFrame {
 
         p_south = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
-        b_next = new javax.swing.JButton();
+        b_go = new javax.swing.JButton();
         cb_fids = new javax.swing.JComboBox<>();
         b_prev = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
@@ -114,7 +121,8 @@ public class Main_Frame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        b_next.setText("jButton1");
+        b_go.setText("Go!");
+        b_go.setToolTipText("Press to load clustered faces for FID selected in dropdown menu.");
 
         b_prev.setIcon(new javax.swing.ImageIcon("/home/jrobby/Documents/janus/sandbox/jrobinson/Agglomerative/java/Cluster_Viewer/resources/arrowleft.png")); // NOI18N
 
@@ -128,7 +136,7 @@ public class Main_Frame extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(cb_fids, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(b_next)
+                .addComponent(b_go)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -138,7 +146,7 @@ public class Main_Frame extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(b_prev)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(b_next)
+                        .addComponent(b_go)
                         .addComponent(cb_fids, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -376,8 +384,8 @@ public class Main_Frame extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton b_go;
     private javax.swing.JButton b_load;
-    private javax.swing.JButton b_next;
     private javax.swing.JButton b_prev;
     private javax.swing.JButton b_save;
     private javax.swing.JComboBox<String> cb_fids;

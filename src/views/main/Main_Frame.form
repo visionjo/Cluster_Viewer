@@ -134,7 +134,7 @@
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="cb_fids" min="-2" pref="133" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="b_next" min="-2" max="-2" attributes="0"/>
+                      <Component id="b_go" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -146,7 +146,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="b_prev" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                              <Component id="b_next" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="b_go" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="cb_fids" alignment="3" min="-2" pref="51" max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -156,9 +156,10 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JButton" name="b_next">
+            <Component class="javax.swing.JButton" name="b_go">
               <Properties>
-                <Property name="text" type="java.lang.String" value="jButton1"/>
+                <Property name="text" type="java.lang.String" value="Go!"/>
+                <Property name="toolTipText" type="java.lang.String" value="Press to load clustered faces for FID selected in dropdown menu."/>
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="cb_fids">
