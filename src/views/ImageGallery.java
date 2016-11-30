@@ -39,7 +39,7 @@ public class ImageGallery extends JFrame {
     private String imagedir = System.getProperty("user.dir") + "/data/FIDs/";
     
     private MissingIcon placeholderIcon = new MissingIcon();
-    
+        
     /**
      * List of all the image files to load.
      */

@@ -33,6 +33,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import utils.Cluster_LUT;
 import utils.Sample_LUT;
+import views.ClusterGrid;
 import views.ImageGallery;
 
 /**
@@ -65,6 +66,7 @@ public class Main_Frame extends javax.swing.JFrame {
         
         cluster_ids_lut = new Cluster_LUT(configs.f_cluster_ids, configs.do_debug);
         cluster_ids_lut.readLUT();
+        
     }
     //</editor-fold>
     
@@ -137,7 +139,7 @@ public class Main_Frame extends javax.swing.JFrame {
         p_im1 = new javax.swing.JPanel();
         p_north = new javax.swing.JPanel();
         sp_unknown = new javax.swing.JScrollPane();
-        sp_unrelated = new javax.swing.JScrollPane();
+        jPanel3 = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         mn_file = new javax.swing.JMenu();
         mnu_load_database = new javax.swing.JMenuItem();
@@ -315,23 +317,34 @@ public class Main_Frame extends javax.swing.JFrame {
                 .addContainerGap(176, Short.MAX_VALUE))
         );
 
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout p_northLayout = new javax.swing.GroupLayout(p_north);
         p_north.setLayout(p_northLayout);
         p_northLayout.setHorizontalGroup(
             p_northLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(p_northLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(sp_unknown, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(42, 42, 42)
-                .addComponent(sp_unrelated, javax.swing.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(sp_unknown, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(94, 94, 94)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         p_northLayout.setVerticalGroup(
             p_northLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(p_northLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(p_northLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(sp_unrelated, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(sp_unknown, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 23, Short.MAX_VALUE))
         );
@@ -458,18 +471,24 @@ public class Main_Frame extends javax.swing.JFrame {
 
         System.out.println("Faces for FID : " + cfid);
         // all images for current FID (i.e., images to be displayed)
-        while(it.hasNext())
-        fid_paths.add(face_lut.get(it.next()));
+        int count = 0;
+        while(it.hasNext() && count < 10) {
+            fid_paths.add(face_lut.get(it.next()));
+            count++;
+        }
         //            System.out.println(face_lut.get(it.next()));
 
         // sample code snippet: open first image of fid collection
-        //   String ipath = configs.d_images + face_lut.get(sample_ids.get(0));
-
-        //   ImagePlus sample_image = IJ.openImage(ipath);
-        //   sample_image.show();
-
-        //  ImageGallery id = new ImageGallery(fid_paths);
-        //  id.setVisible(true);
+           String ipath = configs.d_images + face_lut.get(sample_ids.get(0));
+//
+//           ImagePlus sample_image = IJ.openImage(ipath);
+//           sample_image.show();
+//
+//          ImageGallery id = new ImageGallery(fid_paths);
+//          id.setVisible(true);
+            
+            ClusterGrid cg = new ClusterGrid(fid_paths);
+            cg.setVisible(true);
 
         /**
         *  WORK HERE
@@ -477,42 +496,8 @@ public class Main_Frame extends javax.swing.JFrame {
 
         // set fpaths to images of current FID
 
-        // grid layout:
-        // test:
-
-        File ipath1 = new File(configs.d_images + face_lut.get(sample_ids.get(0)));
-        File ipath2 = new File(configs.d_images + face_lut.get(sample_ids.get(1)));
-        File ipath3 = new File(configs.d_images + face_lut.get(sample_ids.get(2)));
-        File ipath4 = new File(configs.d_images + face_lut.get(sample_ids.get(3)));
-        Image im1 = null, im2 = null, im3 = null, im4 = null;
-        try {
-            im1 = ImageIO.read(getClass().getResource(ipath1.toString()));
-            im2 = ImageIO.read(getClass().getResource(ipath2.toString()));
-            im3 = ImageIO.read(getClass().getResource(ipath3.toString()));
-            im4 = ImageIO.read(getClass().getResource(ipath4.toString()));
-        }
-        catch (IOException e) { }
-
-        JLabel j1 = new JLabel();
-        JLabel j2 = new JLabel();
-        JLabel j3 = new JLabel();
-        JLabel j4 = new JLabel();
-        j1.setIcon(new ImageIcon(im1));
-        j2.setIcon(new ImageIcon(im2));
-        j3.setIcon(new ImageIcon(im3));
-        j4.setIcon(new ImageIcon(im4));
-        j1.setVisible(true);
-
-        JPanel jp = new JPanel(new GridLayout(10, 10));
-
-        jp.add(j1);
-        jp.add(j2);
-        jp.add(j3);
-        jp.add(j4);
-        jp.setVisible(true);
-
+        
     }//GEN-LAST:event_b_go_pressed
-
     /**
      * @param args the command line arguments
      */
@@ -561,6 +546,7 @@ public class Main_Frame extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JLabel l_ids_in;
     private javax.swing.JLabel l_ids_out;
     private javax.swing.JMenu mn_file;
@@ -574,7 +560,6 @@ public class Main_Frame extends javax.swing.JFrame {
     private javax.swing.JPanel p_north;
     private javax.swing.JPanel p_south;
     private javax.swing.JScrollPane sp_unknown;
-    private javax.swing.JScrollPane sp_unrelated;
     private javax.swing.JTextField tf_ids_fin;
     private javax.swing.JTextField tf_ids_fout;
     // End of variables declaration//GEN-END:variables
