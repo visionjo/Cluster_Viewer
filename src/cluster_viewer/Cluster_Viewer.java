@@ -6,7 +6,6 @@
 package cluster_viewer;
 import views.main.Main_Frame;
 import java.io.IOException;
-import views.ImageGallery;
 /**
  *
  * @author jrobby

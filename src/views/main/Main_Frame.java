@@ -15,25 +15,14 @@ import utils.Parse_FID_LUT;
 import utils.Parse_Face_LUT;
 import views.About;
 
-import ij.IJ;
-import ij.ImagePlus;
-import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import utils.Cluster_LUT;
 import utils.Sample_LUT;
+import views.ASampleView;
+import views.ClusterGrid;
 import views.ImageGallery;
+import views.Unclustered;
 
 /**
  *
@@ -46,7 +35,7 @@ public class Main_Frame extends javax.swing.JFrame {
     public HashMap<Integer, String>   face_lut;
     public HashMap<Integer, String>   fid_lut;
     public Sample_LUT   sample_ids_lut; // sample ID to FID
-    public Cluster_LUT  cluster_ids_lut;
+    public Sample_LUT  cluster_ids_lut; // sample ID to Cluster ID
     String cfid; // current FID
     
     //</editor-fold>
@@ -63,8 +52,9 @@ public class Main_Frame extends javax.swing.JFrame {
         sample_ids_lut = new Sample_LUT(configs.f_sample_lut, configs.do_debug);
         sample_ids_lut.readLUT();
         
-        cluster_ids_lut = new Cluster_LUT(configs.f_cluster_ids, configs.do_debug);
+        cluster_ids_lut = new Sample_LUT(configs.f_cluster_ids, configs.do_debug);
         cluster_ids_lut.readLUT();
+        
     }
     //</editor-fold>
     
@@ -92,6 +82,7 @@ public class Main_Frame extends javax.swing.JFrame {
             b_go.setEnabled(true);
         else
             b_go.setEnabled(false);
+        this.set_sPanes();
                
     }
     
@@ -109,6 +100,10 @@ public class Main_Frame extends javax.swing.JFrame {
                 System.out.println("Adding " + fid + " to list menu");
             }
         }
+    }
+    
+    private void set_sPanes() {
+        
     }
     
     /**
@@ -133,11 +128,11 @@ public class Main_Frame extends javax.swing.JFrame {
         l_ids_in = new javax.swing.JLabel();
         b_load = new javax.swing.JButton();
         b_save = new javax.swing.JButton();
-        p_central = new javax.swing.JPanel();
-        p_im1 = new javax.swing.JPanel();
         p_north = new javax.swing.JPanel();
         sp_unknown = new javax.swing.JScrollPane();
         sp_unrelated = new javax.swing.JScrollPane();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         mn_file = new javax.swing.JMenu();
         mnu_load_database = new javax.swing.JMenuItem();
@@ -174,30 +169,27 @@ public class Main_Frame extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(b_prev)
-                .addGap(102, 102, 102)
+                .addGap(96, 96, 96)
                 .addComponent(cb_fids, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(b_go)
-                .addGap(70, 70, 70)
+                .addGap(63, 63, 63)
                 .addComponent(b_next)
-                .addGap(105, 105, 105))
+                .addGap(196, 196, 196))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(b_next, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(b_go)
-                            .addComponent(cb_fids, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(b_prev, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(38, 38, 38)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(b_next, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(b_prev, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cb_fids, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(b_go))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("File Settings"));
@@ -222,7 +214,7 @@ public class Main_Frame extends javax.swing.JFrame {
 
         l_ids_in.setText("Cluster IDs in:");
 
-        b_load.setText("jButton1");
+        b_load.setText("Okay");
         b_load.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         b_load.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -230,8 +222,13 @@ public class Main_Frame extends javax.swing.JFrame {
             }
         });
 
-        b_save.setText("jButton1");
+        b_save.setText("Okay");
         b_save.setEnabled(false);
+        b_save.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                b_saveActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -252,7 +249,7 @@ public class Main_Frame extends javax.swing.JFrame {
                         .addComponent(tf_ids_fin, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(b_load)))
-                .addContainerGap(251, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -261,7 +258,7 @@ public class Main_Frame extends javax.swing.JFrame {
                     .addComponent(tf_ids_fin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(l_ids_in)
                     .addComponent(b_load))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tf_ids_fout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(l_ids_out)
@@ -284,56 +281,42 @@ public class Main_Frame extends javax.swing.JFrame {
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(73, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
-        javax.swing.GroupLayout p_im1Layout = new javax.swing.GroupLayout(p_im1);
-        p_im1.setLayout(p_im1Layout);
-        p_im1Layout.setHorizontalGroup(
-            p_im1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 179, Short.MAX_VALUE)
-        );
-        p_im1Layout.setVerticalGroup(
-            p_im1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 188, Short.MAX_VALUE)
-        );
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel1.setText("Unrelated [-]");
 
-        javax.swing.GroupLayout p_centralLayout = new javax.swing.GroupLayout(p_central);
-        p_central.setLayout(p_centralLayout);
-        p_centralLayout.setHorizontalGroup(
-            p_centralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(p_centralLayout.createSequentialGroup()
-                .addGap(86, 86, 86)
-                .addComponent(p_im1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        p_centralLayout.setVerticalGroup(
-            p_centralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(p_centralLayout.createSequentialGroup()
-                .addGap(32, 32, 32)
-                .addComponent(p_im1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(176, Short.MAX_VALUE))
-        );
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel2.setText("Unknown [0]");
 
         javax.swing.GroupLayout p_northLayout = new javax.swing.GroupLayout(p_north);
         p_north.setLayout(p_northLayout);
         p_northLayout.setHorizontalGroup(
             p_northLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(p_northLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, p_northLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(sp_unknown, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(42, 42, 42)
-                .addComponent(sp_unrelated, javax.swing.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE)
+                .addGroup(p_northLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(sp_unknown, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
+                .addGroup(p_northLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(sp_unrelated, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         p_northLayout.setVerticalGroup(
             p_northLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(p_northLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(p_northLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(sp_unrelated, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(sp_unknown, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 23, Short.MAX_VALUE))
+                .addGroup(p_northLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(p_northLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(sp_unknown, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                    .addComponent(sp_unrelated))
+                .addContainerGap(64, Short.MAX_VALUE))
         );
 
         mn_file.setText("File");
@@ -373,21 +356,16 @@ public class Main_Frame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(p_central, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
             .addComponent(p_south, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(p_north, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(p_north, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(p_north, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(p_central, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(p_south, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(p_south, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
@@ -406,14 +384,13 @@ public class Main_Frame extends javax.swing.JFrame {
         ab.setVisible(true);
     }//GEN-LAST:event_mnu_aboutActionPerformed
 
+    private void b_load_pressed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_load_pressed
+
+    }//GEN-LAST:event_b_load_pressed
+
     private void tf_ids_foutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_ids_foutActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_tf_ids_foutActionPerformed
-
-    private void b_load_pressed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_load_pressed
-        
-        
-    }//GEN-LAST:event_b_load_pressed
 
     private void tf_ids_finActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_ids_finActionPerformed
         // TODO add your handling code here:
@@ -458,61 +435,56 @@ public class Main_Frame extends javax.swing.JFrame {
 
         System.out.println("Faces for FID : " + cfid);
         // all images for current FID (i.e., images to be displayed)
-        while(it.hasNext())
-        fid_paths.add(face_lut.get(it.next()));
-        //            System.out.println(face_lut.get(it.next()));
+        Vector<ClusterGrid> grids = new Vector();
+        Vector<String> fid_paths_unknown = new Vector();
+        Vector<String> fid_paths_unrelated = new Vector();
 
-        // sample code snippet: open first image of fid collection
-        //   String ipath = configs.d_images + face_lut.get(sample_ids.get(0));
-
-        //   ImagePlus sample_image = IJ.openImage(ipath);
-        //   sample_image.show();
-
-        //  ImageGallery id = new ImageGallery(fid_paths);
-        //  id.setVisible(true);
-
-        /**
-        *  WORK HERE
-        */
-
-        // set fpaths to images of current FID
-
-        // grid layout:
-        // test:
-
-        File ipath1 = new File(configs.d_images + face_lut.get(sample_ids.get(0)));
-        File ipath2 = new File(configs.d_images + face_lut.get(sample_ids.get(1)));
-        File ipath3 = new File(configs.d_images + face_lut.get(sample_ids.get(2)));
-        File ipath4 = new File(configs.d_images + face_lut.get(sample_ids.get(3)));
-        Image im1 = null, im2 = null, im3 = null, im4 = null;
-        try {
-            im1 = ImageIO.read(getClass().getResource(ipath1.toString()));
-            im2 = ImageIO.read(getClass().getResource(ipath2.toString()));
-            im3 = ImageIO.read(getClass().getResource(ipath3.toString()));
-            im4 = ImageIO.read(getClass().getResource(ipath4.toString()));
+        int count = 1; // for testing only! Adds 12 members to each grid
+        int cluster = -1; // for testing only, each 12 members is a cluster
+        while(it.hasNext()) {
+            // Unknown ID = -1, if cluster is -1, add to unknown panel
+            if (cluster == -1) {
+                fid_paths_unknown.add(face_lut.get(it.next()));
+                if (count % 12 == 0) {
+                    cluster++;
+                    count = 1;
+                }
+            }
+            // Unrelated ID = 0, if cluster is 0, add to unrelated panel
+            else if (cluster == 0) {
+                fid_paths_unrelated.add(face_lut.get(it.next()));
+                if (count % 12 == 0) {
+                    cluster++;
+                    count = 1;
+                }
+            }
+            else {
+                fid_paths.add(face_lut.get(it.next()));
+            }
+            if (count % 12 == 0 && cluster > 0) {
+                // add a new ClusterGrid to the Vector
+                grids.add(new ClusterGrid(cfid, cluster, fid_paths));
+                fid_paths.clear();
+                cluster++;
+            }
+            count++;
         }
-        catch (IOException e) { }
-
-        JLabel j1 = new JLabel();
-        JLabel j2 = new JLabel();
-        JLabel j3 = new JLabel();
-        JLabel j4 = new JLabel();
-        j1.setIcon(new ImageIcon(im1));
-        j2.setIcon(new ImageIcon(im2));
-        j3.setIcon(new ImageIcon(im3));
-        j4.setIcon(new ImageIcon(im4));
-        j1.setVisible(true);
-
-        JPanel jp = new JPanel(new GridLayout(10, 10));
-
-        jp.add(j1);
-        jp.add(j2);
-        jp.add(j3);
-        jp.add(j4);
-        jp.setVisible(true);
+        
+        // Create and set visible the unrelated/unknown scrollpanels and the
+        // main image gallery
+        ASampleView uc = new Unclustered(cfid, -1, fid_paths_unknown);
+        this.sp_unknown.setViewportView(uc.getPanel());
+        ASampleView ur = new Unclustered(cfid, 0, fid_paths_unrelated);
+        this.sp_unrelated.setViewportView(ur.getPanel());
+        ImageGallery ig = new ImageGallery(grids, cfid);
+        
+        ig.setVisible(true);
 
     }//GEN-LAST:event_b_go_pressed
 
+    private void b_saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_saveActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_b_saveActionPerformed
     /**
      * @param args the command line arguments
      */
@@ -548,7 +520,7 @@ public class Main_Frame extends javax.swing.JFrame {
         });
     }
 
- 
+ // class id for images
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -558,6 +530,8 @@ public class Main_Frame extends javax.swing.JFrame {
     private javax.swing.JButton b_prev;
     private javax.swing.JButton b_save;
     private javax.swing.JComboBox<String> cb_fids;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -569,8 +543,6 @@ public class Main_Frame extends javax.swing.JFrame {
     private javax.swing.JMenuItem mnu_close;
     private javax.swing.JMenuItem mnu_load_database;
     private javax.swing.JMenuItem mnu_quit;
-    private javax.swing.JPanel p_central;
-    private javax.swing.JPanel p_im1;
     private javax.swing.JPanel p_north;
     private javax.swing.JPanel p_south;
     private javax.swing.JScrollPane sp_unknown;
