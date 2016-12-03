@@ -5,11 +5,6 @@
  */
 package views.main;
 
-
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -42,7 +37,9 @@ public class Main_Frame extends javax.swing.JFrame {
     public Sample_LUT   sample_ids_lut; // sample ID to FID
     public Sample_LUT  cluster_ids_lut; // sample ID to Cluster ID
     String cfid; // current FID
-   // ImageGallery Ig;
+    ImageGallery ig;
+    ASampleView ur;
+    ASampleView uk;
     
     //</editor-fold>
        
@@ -527,17 +524,17 @@ public class Main_Frame extends javax.swing.JFrame {
         int count = 1; // for testing only! Adds 12 members to each grid
         int cluster = -1; // for testing only, each 12 members is a cluster
         while(it.hasNext()) {
-            // Unknown ID = -1, if cluster is -1, add to unknown panel
+            // Unrelated ID = -1, if cluster is -1, add to unrelated panel
             if (cluster == -1) {
-                fid_paths_unknown.add(face_lut.get(it.next()));
+                fid_paths_unrelated.add(face_lut.get(it.next()));
                 if (count % 12 == 0) {
                     cluster++;
                     count = 1;
                 }
             }
-            // Unrelated ID = 0, if cluster is 0, add to unrelated panel
+            // Unknown ID = 0, if cluster is 0, add to unknown panel
             else if (cluster == 0) {
-                fid_paths_unrelated.add(face_lut.get(it.next()));
+                fid_paths_unknown.add(face_lut.get(it.next()));
                 if (count % 12 == 0) {
                     cluster++;
                     count = 1;
@@ -557,13 +554,54 @@ public class Main_Frame extends javax.swing.JFrame {
         
         // Create and set visible the unrelated/unknown scrollpanels and the
         // main image gallery
-        ASampleView uc = new Unclustered(cfid, -1, fid_paths_unknown);
-        this.sp_unknown.setViewportView(uc.getPanel());
-        ASampleView ur = new Unclustered(cfid, 0, fid_paths_unrelated);
+        this.ig = new ImageGallery(grids, cfid);
+        this.uk = new Unclustered(cfid, 0, fid_paths_unknown, ig);
+        this.sp_unknown.setViewportView(uk.getPanel());
+        this.ur = new Unclustered(cfid, -1, fid_paths_unrelated, ig);
         this.sp_unrelated.setViewportView(ur.getPanel());
-        ImageGallery Ig  = new ImageGallery(grids, cfid);
         
-        Ig.setVisible(true);
+        this.ig.setVisible(true);
         
+    }
+    
+    // changes the cluster when the Sample is involved with an Unclustered
+    // object.
+    public void changeCluster(Sample samp, int val) {
+        // if sample is changing to Unrelated
+        if (val == -1) {
+            this.sp_unrelated.setVisible(false); // to refresh images
+            this.sp_unknown.setVisible(false);
+            this.uk.remove(samp);
+            this.ur.add(samp);
+            this.sp_unrelated.setVisible(true);
+            this.sp_unknown.setVisible(true);
+        }
+        // if sample is changing to Unknown
+        else if (val == 0) {
+            this.sp_unrelated.setVisible(false); // to refresh images
+            this.sp_unknown.setVisible(false);
+            this.ur.remove(samp);
+            this.uk.add(samp);
+            this.sp_unrelated.setVisible(true);
+            this.sp_unknown.setVisible(true);
+        }
+        // if sample is changing to valid Cluster
+        else {
+            this.ig.updateGrids(samp, val);
+        }
+    }
+    
+    // set default focus to first sample in unknown panel
+    public void setDefaultFocus(Sample samp) {
+        int val = samp.getCluster();
+        if (val <= 0) {
+            Sample s = this.uk.getFirst();
+            if (s != null) {
+                s.requestFocus();
+            }
+        }
+        else {
+            this.ig.setDefaultFocus(samp);
+        }
     }
 }

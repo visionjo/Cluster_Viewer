@@ -19,11 +19,15 @@ public class Unclustered extends ASampleView {
     // Unrelated: -1, Unknown: 0
     String type;
     
-    public Unclustered(String fid, int cluster, Vector fnames) {
+    ImageGallery ig;
+    
+    public Unclustered(String fid, int cluster, Vector fnames, ImageGallery ig) {
         super(fid, cluster, fnames);
         
         // init panel
         this.panel = new JPanel();
+        
+        this.ig = ig;
         
         // check for valid cluster
         switch (this.cluster) {
@@ -41,10 +45,5 @@ public class Unclustered extends ASampleView {
         try {
             this.loadImgs();
         } catch (FileNotFoundException ef) { }
-    }
-    
-    public void updateSamples(Sample samp, int val) {
-        this.remove(samp);
-        
     }
 }

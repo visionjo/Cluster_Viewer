@@ -83,6 +83,10 @@ public class ASampleView extends JPanel {
         return this.panel;
     }
     
+    public Sample getFirst() {
+        return this.ref_sample.firstElement();
+    }
+    
     /**
      * Resizes an image using a Graphics2D object backed by a BufferedImage.
      * @param srcImg - source image to scale
@@ -101,16 +105,29 @@ public class ASampleView extends JPanel {
         return resizedImg;
     }
     
+    public boolean hasMember(Sample samp) {
+        boolean result = false;
+        for (Sample s : this.ref_sample) {
+            if (s.equals(samp)) {
+                result = true;
+            }
+        }
+        return result;
+    }
+    
+    // adds a sample to the view
     public void add(Sample samp) {
         this.ref_sample.add(samp);
         this.updateSamps();
     }
     
+    // removes a sample from the view
     public void remove(Sample samp) {
         this.ref_sample.remove(samp);
         this.updateSamps();
     }
     
+    // updates the shown samples
     private void updateSamps() {
         this.panel.removeAll();
         for (Sample s : this.ref_sample) {

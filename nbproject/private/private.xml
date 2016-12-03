@@ -5,10 +5,12 @@
         <group>
             <file>file:/C:/Users/Tim/Documents/NetBeansProjects/Cluster_Viewer/src/views/ImageGallery.java</file>
             <file>file:/C:/Users/Tim/Documents/NetBeansProjects/Cluster_Viewer/src/views/Sample.java</file>
-            <file>file:/C:/Users/Tim/Documents/NetBeansProjects/Cluster_Viewer/src/cluster_viewer/Cluster_Viewer.java</file>
+            <file>file:/C:/Users/Tim/Documents/NetBeansProjects/Cluster_Viewer/data/cluster_ids_F0009.csv</file>
+            <file>file:/C:/Users/Tim/Documents/NetBeansProjects/Cluster_Viewer/src/views/Unclustered.java</file>
             <file>file:/C:/Users/Tim/Documents/NetBeansProjects/Cluster_Viewer/src/views/ClusterGrid.java</file>
-            <file>file:/C:/Users/Tim/Documents/NetBeansProjects/Cluster_Viewer/src/views/ImgGallery.java</file>
+            <file>file:/C:/Users/Tim/Documents/NetBeansProjects/Cluster_Viewer/src/utils/Configurations.java</file>
             <file>file:/C:/Users/Tim/Documents/NetBeansProjects/Cluster_Viewer/src/views/main/Main_Frame.java</file>
+            <file>file:/C:/Users/Tim/Documents/NetBeansProjects/Cluster_Viewer/src/views/ASampleView.java</file>
         </group>
     </open-files>
 </project-private>

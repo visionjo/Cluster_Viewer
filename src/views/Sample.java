@@ -20,6 +20,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
+import views.main.Main_Frame;
 
 /**
  *
@@ -61,18 +62,25 @@ public class Sample extends JButton {
             @Override
             public void keyTyped(KeyEvent e) {
                 int ke = Character.getNumericValue(e.getKeyChar());
+                // if the key pressed is not the same value as this cluster, and
+                // is a valid cluster, change the cluster
                 if (ke != Sample.this.cluster && ke >= -1) {
+                    // get the root component (ImageGallery or Main_Frame)
                     Component c = SwingUtilities.getRoot(Sample.this);
                     if (c instanceof ImageGallery) {
+                        System.out.println("IG");
                         ImageGallery ig = (ImageGallery)c;
                         ig.updateGrids(Sample.this, ke);
+                        ig.setDefaultFocus(Sample.this);
                     }
-                    else if (c instanceof Unclustered) {
-                        ASampleView un = (Unclustered)c;
-                        un.remove(Sample.this);
-                        
+                    else if (c instanceof Main_Frame)  {
+                        System.out.println(c.getName());
+                        Main_Frame mf = (Main_Frame)c;
+                        mf.changeCluster(Sample.this, ke);
+                        mf.setDefaultFocus(Sample.this);
                     }
-                    Sample.this.upCluster(ke);
+                    // update the cluster
+                    Sample.this.upCluster(ke);   
                 }
             }
 
@@ -93,11 +101,8 @@ public class Sample extends JButton {
 
             @Override
             public void focusLost(FocusEvent e) {
-                // Set focus to first in unknown
-                
                 // remove border
                 Sample.this.setBorder(Sample.this.noFocus);
-
             }
             
         });
@@ -107,6 +112,10 @@ public class Sample extends JButton {
     public void upCluster(int clusterNew) {
         System.out.println("Changed from " + this.cluster + " to " + clusterNew);
         this.cluster = clusterNew;
+    }
+    
+    public int getCluster() {
+        return this.cluster;
     }
     
 }

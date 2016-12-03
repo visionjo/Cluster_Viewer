@@ -44,11 +44,7 @@ public class ImageGallery extends javax.swing.JFrame {
     // width and height for grid
     int row;
     final int col = 2;
-    
-   // ASampleView 
-    
-    // reference to the clusters as JPanels (FOR CHANGING CLUSTERS)
-    
+            
     public ImageGallery(Vector<ClusterGrid> grids, String fid) { 
         this.fid = fid;
         this.grids = grids;
@@ -59,7 +55,7 @@ public class ImageGallery extends javax.swing.JFrame {
         // add the ClusterGrids to the Gallery
         this.addClusters();
         
-        this.setName("ImgGallery");
+        this.setName("ImageGallery");
         
         // FOR NOW
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -114,6 +110,12 @@ public class ImageGallery extends javax.swing.JFrame {
     
     // updates the grids when a Sample's cluster is changed
     public void updateGrids(Sample samp, int val) {
+        this.setVisible(false);
+        if (val < 1) {
+            SwingUtilities.getRoot(this);
+            System.out.println();
+        }
+        else {
         for (ClusterGrid cg : this.grids) {
             // find the grid with the new cluster value and add the sample
             if (cg.cluster == val) {
@@ -122,6 +124,21 @@ public class ImageGallery extends javax.swing.JFrame {
             // find the grid with the old cluster value and remove the sample
             if (cg.cluster == samp.cluster) {
                 cg.remove(samp);
+            }
+        }
+        }
+        this.setVisible(true);
+    }
+    
+    public void setDefaultFocus(Sample samp) {
+        ClusterGrid foc = null;
+        for (ClusterGrid cg : this.grids) {
+            if (cg.cluster == samp.cluster) {
+                foc = cg;
+                foc.getFirst().requestFocus();
+            }
+            else {
+                System.out.println("ERRORERRORERROR");
             }
         }
     }
