@@ -34,6 +34,8 @@ public class ClusterGrid extends ASampleView {
         // initialize the grid and panel
         this.initGrid();
         
+        this.panel.setName("ClusterGrid: " + fid);
+        
         // load the images into the grid
         try {
             this.loadImgs();
@@ -42,7 +44,7 @@ public class ClusterGrid extends ASampleView {
     
     private void initGrid() {
         // set the rows and columns
-        this.photoGrid = new GridLayout(3, 4);
+        this.photoGrid = new GridLayout(5, 4);
         
         // set the gaps between images
         photoGrid.setHgap(this.hGap);

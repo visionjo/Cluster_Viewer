@@ -23,7 +23,7 @@ import javax.swing.JPanel;
  */
 // to represent an abstract view for samples, either a grid of clustered images,
 // or in an unrelated/unknown panel
-public class ASampleView {
+public class ASampleView extends JPanel {
     // family ID
     String fid;
     
@@ -39,10 +39,14 @@ public class ASampleView {
     // directory for sample images
     String imagedir = System.getProperty("user.dir") + "/data/FIDs/";
     
+    // reference to samples in this view (FOR CHANGING CLUSTERS)
+    Vector<Sample> ref_sample;
+    
     ASampleView(String fid, int cluster, Vector fnames) {
         this.fid = fid;
         this.cluster = cluster;
         this.fnames = fnames;
+        this.ref_sample = new Vector<>();
     }
     
     // load the Images as BufferedImages, resizes them to 75x75 pixels, creates
@@ -60,6 +64,7 @@ public class ASampleView {
                         this.cluster);
                 samp.setHorizontalAlignment(JLabel.CENTER);
                 panel.add(samp);
+                this.ref_sample.add(samp);
             }
             catch (FileNotFoundException ef) {
                 System.out.println("File not found");
@@ -94,5 +99,22 @@ public class ASampleView {
         g2.drawImage(srcImg, 0, 0, w, h, null);
         g2.dispose();
         return resizedImg;
+    }
+    
+    public void add(Sample samp) {
+        this.ref_sample.add(samp);
+        this.updateSamps();
+    }
+    
+    public void remove(Sample samp) {
+        this.ref_sample.remove(samp);
+        this.updateSamps();
+    }
+    
+    private void updateSamps() {
+        this.panel.removeAll();
+        for (Sample s : this.ref_sample) {
+            this.panel.add(s);
+        }
     }
 }

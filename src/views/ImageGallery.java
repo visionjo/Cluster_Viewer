@@ -18,6 +18,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import static javax.swing.BorderFactory.createLineBorder;
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -44,6 +45,10 @@ public class ImageGallery extends javax.swing.JFrame {
     int row;
     final int col = 2;
     
+   // ASampleView 
+    
+    // reference to the clusters as JPanels (FOR CHANGING CLUSTERS)
+    
     public ImageGallery(Vector<ClusterGrid> grids, String fid) { 
         this.fid = fid;
         this.grids = grids;
@@ -53,6 +58,8 @@ public class ImageGallery extends javax.swing.JFrame {
         
         // add the ClusterGrids to the Gallery
         this.addClusters();
+        
+        this.setName("ImgGallery");
         
         // FOR NOW
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -102,6 +109,20 @@ public class ImageGallery extends javax.swing.JFrame {
             jp.setBorder(BorderFactory.createTitledBorder(createLineBorder(
                     Color.BLACK), "Cluster ID: " + cg.getCluster()));
             this.container.add(jp);
+        }
+    }
+    
+    // updates the grids when a Sample's cluster is changed
+    public void updateGrids(Sample samp, int val) {
+        for (ClusterGrid cg : this.grids) {
+            // find the grid with the new cluster value and add the sample
+            if (cg.cluster == val) {
+                cg.add(samp);
+            }
+            // find the grid with the old cluster value and remove the sample
+            if (cg.cluster == samp.cluster) {
+                cg.remove(samp);
+            }
         }
     }
 }

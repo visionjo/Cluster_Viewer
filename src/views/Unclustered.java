@@ -42,4 +42,9 @@ public class Unclustered extends ASampleView {
             this.loadImgs();
         } catch (FileNotFoundException ef) { }
     }
+    
+    public void updateSamples(Sample samp, int val) {
+        this.remove(samp);
+        
+    }
 }

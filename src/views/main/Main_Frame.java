@@ -6,6 +6,10 @@
 package views.main;
 
 
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -22,6 +26,7 @@ import utils.Sample_LUT;
 import views.ASampleView;
 import views.ClusterGrid;
 import views.ImageGallery;
+import views.Sample;
 import views.Unclustered;
 
 /**
@@ -37,6 +42,7 @@ public class Main_Frame extends javax.swing.JFrame {
     public Sample_LUT   sample_ids_lut; // sample ID to FID
     public Sample_LUT  cluster_ids_lut; // sample ID to Cluster ID
     String cfid; // current FID
+   // ImageGallery Ig;
     
     //</editor-fold>
        
@@ -48,12 +54,15 @@ public class Main_Frame extends javax.swing.JFrame {
         configs = new Configurations();
         initComponents();
         get_luts();
+        //this.Ig = null;
         
         sample_ids_lut = new Sample_LUT(configs.f_sample_lut, configs.do_debug);
         sample_ids_lut.readLUT();
         
         cluster_ids_lut = new Sample_LUT(configs.f_cluster_ids, configs.do_debug);
         cluster_ids_lut.readLUT();
+        
+        this.setName("Main_Frame");
         
     }
     //</editor-fold>
@@ -384,6 +393,10 @@ public class Main_Frame extends javax.swing.JFrame {
         ab.setVisible(true);
     }//GEN-LAST:event_mnu_aboutActionPerformed
 
+    private void b_saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_saveActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_b_saveActionPerformed
+
     private void b_load_pressed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_load_pressed
 
     }//GEN-LAST:event_b_load_pressed
@@ -425,66 +438,12 @@ public class Main_Frame extends javax.swing.JFrame {
         }
         cfid = cb_fids.getItemAt(ind);
 
-        Vector<String> fid_paths = new Vector<>();
-        Vector<Integer> sample_ids = sample_ids_lut.get(cfid);
-
-        String fpath = configs.d_images + "/" + cfid;
-        // The Iterator object is obtained using iterator() method
-        Iterator it = sample_ids.iterator();
-        // To iterate through the elements of the collection we can use hasNext() and next() methods of Iterator
-
         System.out.println("Faces for FID : " + cfid);
         // all images for current FID (i.e., images to be displayed)
-        Vector<ClusterGrid> grids = new Vector();
-        Vector<String> fid_paths_unknown = new Vector();
-        Vector<String> fid_paths_unrelated = new Vector();
 
-        int count = 1; // for testing only! Adds 12 members to each grid
-        int cluster = -1; // for testing only, each 12 members is a cluster
-        while(it.hasNext()) {
-            // Unknown ID = -1, if cluster is -1, add to unknown panel
-            if (cluster == -1) {
-                fid_paths_unknown.add(face_lut.get(it.next()));
-                if (count % 12 == 0) {
-                    cluster++;
-                    count = 1;
-                }
-            }
-            // Unrelated ID = 0, if cluster is 0, add to unrelated panel
-            else if (cluster == 0) {
-                fid_paths_unrelated.add(face_lut.get(it.next()));
-                if (count % 12 == 0) {
-                    cluster++;
-                    count = 1;
-                }
-            }
-            else {
-                fid_paths.add(face_lut.get(it.next()));
-            }
-            if (count % 12 == 0 && cluster > 0) {
-                // add a new ClusterGrid to the Vector
-                grids.add(new ClusterGrid(cfid, cluster, fid_paths));
-                fid_paths.clear();
-                cluster++;
-            }
-            count++;
-        }
-        
-        // Create and set visible the unrelated/unknown scrollpanels and the
-        // main image gallery
-        ASampleView uc = new Unclustered(cfid, -1, fid_paths_unknown);
-        this.sp_unknown.setViewportView(uc.getPanel());
-        ASampleView ur = new Unclustered(cfid, 0, fid_paths_unrelated);
-        this.sp_unrelated.setViewportView(ur.getPanel());
-        ImageGallery ig = new ImageGallery(grids, cfid);
-        
-        ig.setVisible(true);
+        this.initGallery();
 
     }//GEN-LAST:event_b_go_pressed
-
-    private void b_saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_saveActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_b_saveActionPerformed
     /**
      * @param args the command line arguments
      */
@@ -550,4 +509,61 @@ public class Main_Frame extends javax.swing.JFrame {
     private javax.swing.JTextField tf_ids_fin;
     private javax.swing.JTextField tf_ids_fout;
     // End of variables declaration//GEN-END:variables
+
+    public void initGallery() {
+        Vector<String> fid_paths = new Vector<>();
+        Vector<Integer> sample_ids = sample_ids_lut.get(cfid);
+
+        String fpath = configs.d_images + "/" + cfid;
+        // The Iterator object is obtained using iterator() method
+        
+        Iterator it = sample_ids.iterator();
+        // To iterate through the elements of the collection we can use hasNext() and next() methods of Iterator
+        
+        Vector<ClusterGrid> grids = new Vector();
+        Vector<String> fid_paths_unknown = new Vector();
+        Vector<String> fid_paths_unrelated = new Vector();
+
+        int count = 1; // for testing only! Adds 12 members to each grid
+        int cluster = -1; // for testing only, each 12 members is a cluster
+        while(it.hasNext()) {
+            // Unknown ID = -1, if cluster is -1, add to unknown panel
+            if (cluster == -1) {
+                fid_paths_unknown.add(face_lut.get(it.next()));
+                if (count % 12 == 0) {
+                    cluster++;
+                    count = 1;
+                }
+            }
+            // Unrelated ID = 0, if cluster is 0, add to unrelated panel
+            else if (cluster == 0) {
+                fid_paths_unrelated.add(face_lut.get(it.next()));
+                if (count % 12 == 0) {
+                    cluster++;
+                    count = 1;
+                }
+            }
+            else {
+                fid_paths.add(face_lut.get(it.next()));
+            }
+            if (count % 12 == 0 && cluster > 0) {
+                // add a new ClusterGrid to the Vector
+                grids.add(new ClusterGrid(cfid, cluster, fid_paths));
+                fid_paths.clear();
+                cluster++;
+            }
+            count++;
+        }
+        
+        // Create and set visible the unrelated/unknown scrollpanels and the
+        // main image gallery
+        ASampleView uc = new Unclustered(cfid, -1, fid_paths_unknown);
+        this.sp_unknown.setViewportView(uc.getPanel());
+        ASampleView ur = new Unclustered(cfid, 0, fid_paths_unrelated);
+        this.sp_unrelated.setViewportView(ur.getPanel());
+        ImageGallery Ig  = new ImageGallery(grids, cfid);
+        
+        Ig.setVisible(true);
+        
+    }
 }
