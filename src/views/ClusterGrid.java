@@ -21,11 +21,9 @@ public class ClusterGrid extends ASampleView {
     // grid where samples will appear
     private GridLayout photoGrid;
     
-    // rows and columns for grid
-    private int row, col;
     
     // gaps between sample images
-    private final int vGap  = 10;
+    private final int vGap  = 5;
     private final int hGap = 5;
     
     public ClusterGrid(String fid, int cluster, Vector fnames) {
@@ -33,7 +31,6 @@ public class ClusterGrid extends ASampleView {
         
         // initialize the grid and panel
         this.initGrid();
-        
         this.panel.setName("ClusterGrid: " + fid);
         
         // load the images into the grid
@@ -44,7 +41,19 @@ public class ClusterGrid extends ASampleView {
     
     private void initGrid() {
         // set the rows and columns
-        this.photoGrid = new GridLayout(5, 4);
+        col = 5 + (fnames.size() / 24);
+        if (fnames.size() < 5) {
+            col = fnames.size();
+        }
+        row = (int)Math.ceil(fnames.size() / (double)col);
+        if (col == 0) {
+            col = 1;
+        }
+        if (row == 0) {
+            row = 1;
+        }
+        
+        this.photoGrid = new GridLayout(row, col);
         
         // set the gaps between images
         photoGrid.setHgap(this.hGap);

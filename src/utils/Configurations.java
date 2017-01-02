@@ -19,7 +19,7 @@ import java.util.Vector;
  */
 public class Configurations {
 
-    public String f_cluster_ids;
+    public String f_cluster_ids = "cluster_ids_F0009.csv";
     public String d_root; 
     public String d_data;
     public String d_images;
@@ -56,7 +56,7 @@ public class Configurations {
             f_sample_lut = d_root + d_data + f_sample_lut;
             
             d_images = d_root + prop.getProperty(CONFIG_KEYS[0]);
-            f_cluster_ids = d_root + d_data + prop.getProperty(CONFIG_KEYS[1]);
+            f_cluster_ids = d_root + d_data + f_cluster_ids;
             String tmp = prop.getProperty(CONFIG_KEYS[2]);
 
             String[] fid_array = tmp.split(",");

@@ -5,6 +5,7 @@
  */
 package views;
 
+import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
@@ -16,6 +17,7 @@ import java.util.Vector;
 import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -42,6 +44,9 @@ public class ASampleView extends JPanel {
     // reference to samples in this view (FOR CHANGING CLUSTERS)
     Vector<Sample> ref_sample;
     
+     // rows and columns for grid
+    public int row, col;
+    
     ASampleView(String fid, int cluster, Vector fnames) {
         this.fid = fid;
         this.cluster = cluster;
@@ -60,7 +65,7 @@ public class ASampleView extends JPanel {
                 img = ImageIO.read(new File(this.imagedir + f));
 
                 // add the resized image as a Sample to the JPanel
-                samp = new Sample(this.getScaledImage(img, 75, 75), "Name",
+                samp = new Sample(this.getScaledImage(img, 75, 75), f,
                         this.cluster);
                 samp.setHorizontalAlignment(JLabel.CENTER);
                 panel.add(samp);
@@ -119,12 +124,16 @@ public class ASampleView extends JPanel {
     public void add(Sample samp) {
         this.ref_sample.add(samp);
         this.updateSamps();
+        this.panel.validate();
+        this.panel.repaint();
     }
     
     // removes a sample from the view
     public void remove(Sample samp) {
         this.ref_sample.remove(samp);
         this.updateSamps();
+        this.panel.revalidate();
+        this.panel.repaint();
     }
     
     // updates the shown samples
@@ -133,5 +142,7 @@ public class ASampleView extends JPanel {
         for (Sample s : this.ref_sample) {
             this.panel.add(s);
         }
+//        this.panel.revalidate();
+//        this.revalidate();
     }
 }

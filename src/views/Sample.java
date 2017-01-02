@@ -32,20 +32,20 @@ public class Sample extends JButton {
     Image img;
     
     // sample name
-    String name;
+    String path;
     
     // the cluster in its fid
     int cluster;
     
     // Borders
     TitledBorder noFocus = BorderFactory.createTitledBorder(
-                BorderFactory.createEmptyBorder(), this.name);
+                BorderFactory.createEmptyBorder());
     TitledBorder focused = BorderFactory.createTitledBorder(
-                BorderFactory.createLineBorder(Color.RED, 5), this.name);
+                BorderFactory.createLineBorder(Color.RED, 5));
     
-    Sample(Image img, String name, int cluster) {
+    Sample(Image img, String path, int cluster) {
         this.img = img;
-        this.name = name;
+        this.path = path;
         this.cluster = cluster;
         this.setIcon(new ImageIcon(img));
         
@@ -68,19 +68,13 @@ public class Sample extends JButton {
                     // get the root component (ImageGallery or Main_Frame)
                     Component c = SwingUtilities.getRoot(Sample.this);
                     if (c instanceof ImageGallery) {
-                        System.out.println("IG");
                         ImageGallery ig = (ImageGallery)c;
                         ig.updateGrids(Sample.this, ke);
                         ig.setDefaultFocus(Sample.this);
                     }
-                    else if (c instanceof Main_Frame)  {
-                        System.out.println(c.getName());
-                        Main_Frame mf = (Main_Frame)c;
-                        mf.changeCluster(Sample.this, ke);
-                        mf.setDefaultFocus(Sample.this);
-                    }
                     // update the cluster
                     Sample.this.upCluster(ke);   
+                    Sample.this.revalidate();
                 }
             }
 
@@ -110,7 +104,13 @@ public class Sample extends JButton {
     
     // called when user changes cluster of Sample, updates to new cluster
     public void upCluster(int clusterNew) {
-        System.out.println("Changed from " + this.cluster + " to " + clusterNew);
+        Component c = SwingUtilities.getRoot(Sample.this);
+        if (c instanceof ImageGallery) {
+            ImageGallery ig = (ImageGallery)c;
+            ig.logger.info("Sample at: " + path + " Changed from " + 
+                cluster + " to " + clusterNew);
+        }
+        
         this.cluster = clusterNew;
     }
     

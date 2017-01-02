@@ -8,6 +8,7 @@ package views;
 import java.io.FileNotFoundException;
 import java.util.Vector;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 /**
  *
@@ -19,15 +20,13 @@ public class Unclustered extends ASampleView {
     // Unrelated: -1, Unknown: 0
     String type;
     
-    ImageGallery ig;
+    JScrollPane pane;
     
-    public Unclustered(String fid, int cluster, Vector fnames, ImageGallery ig) {
+    public Unclustered(String fid, int cluster, Vector fnames) {
         super(fid, cluster, fnames);
         
         // init panel
         this.panel = new JPanel();
-        
-        this.ig = ig;
         
         // check for valid cluster
         switch (this.cluster) {
@@ -40,10 +39,12 @@ public class Unclustered extends ASampleView {
             default:
                 throw new IllegalArgumentException("Invalid cluster");
         }
-        
         // load the images into the panel
         try {
             this.loadImgs();
         } catch (FileNotFoundException ef) { }
+        pane = new JScrollPane(panel);
+        pane.getHorizontalScrollBar();
+        this.add(pane);
     }
 }
